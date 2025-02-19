@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright 2023 KillFrenzy / Evan Tran
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -179,7 +179,7 @@ Shader "Unlit/KF_VRChatAvatarTextShader"
 			"DisableBatching" = "True"
 			"IgnoreProjector" = "True"
 			"PreviewType"="Plane"
-			"Queue" = "AlphaTest+549"
+			"Queue" = "Overlay+100"
 		}
 
 		LOD 100
@@ -457,7 +457,7 @@ Shader "Unlit/KF_VRChatAvatarTextShader"
 				centerEye = .5 * (unity_StereoWorldSpaceCameraPos[0] + unity_StereoWorldSpaceCameraPos[1]);
 				#endif
 
-				float3 objPos = unity_ObjectToWorld._14_24_34;
+				float3 objPos = unity_ObjectToWorld[3].xyz;
 				v.vertex *= 1 + smoothstep(0, 1, distance(centerEye, objPos)-0.5);
 			}
 
@@ -538,8 +538,8 @@ Shader "Unlit/KF_VRChatAvatarTextShader"
 				charCurrent += floor(charCurrent / charLimit) * charLimit;
 			}
 
-			if (ceil(i.uv.x) != 1) discardPixel = 1;
-			if (ceil(i.uv.y) != 1) discardPixel = 1;
+			if (i.uv.x < -0.01 || i.uv.x > 1.01 || i.uv.y < -0.01 || i.uv.y > 1.01)
+				discard;
 
 			float2 uvPosition = (fmod(i.uv * charSize, 1.0) / uvSize);
 			float2 uvOffset = float2(fmod(charCurrent, uvSize.x) * uvTile.x, 1.0
